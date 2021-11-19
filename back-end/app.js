@@ -1,6 +1,7 @@
 const express = require('express')
 const bodyParser = require('body-parser')
-const { Topic } = require('./model/topic');
+
+const { Topic, sequelize } = require('./model/topic')
 
 const app = express()
 const port = 3000
@@ -12,6 +13,7 @@ app.use(bodyParser.urlencoded({
 
 // Post Topic
 app.post('/topic', async (req, res) => {
+  await sequelize.sync()
   const topic = await Topic.create({
     title: req.body.title,
     description: req.body.description
@@ -22,6 +24,7 @@ app.post('/topic', async (req, res) => {
 
 // Get Topics
 app.get('/topics', async (req, res) => {
+    await sequelize.sync()
     const topics = await Topic.findAll()
     res.status(200).send(topics)
 })

@@ -1,8 +1,10 @@
-module.exports = (sequelize, DataTypes) => {
-    const Topic = sequelize.define('Topic', {
-        title: DataTypes.STRING,
-        description: DataTypes.STRING   
-    }, { tableName: 'topics', sequelize })
+const { Sequelize, Model, DataTypes } = require('sequelize');
+const sequelize = new Sequelize('sqlite::memory:');
 
-    return Topic
-}
+class Topic extends Model {}
+Topic.init({
+  title: DataTypes.STRING,
+  description: DataTypes.STRING,
+}, { sequelize, modelName: 'topic' });
+
+module.exports = {Topic, sequelize}

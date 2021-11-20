@@ -6,10 +6,8 @@ const App = () => {
  
   const [topics, setTopics] = useState([]);
 
-  useEffect(async () => {
-    const res = await Axios.get("http://localhost:8080/topics")
-    console.log(res.data)
-    setTopics(res.data)
+  useEffect(() => {
+    Axios.get("http://localhost:8080/topics").then((res) => setTopics(res.data))
   }, [])
 
   return <div className="container">
@@ -30,6 +28,8 @@ const Form = ({topics, setTopics}) => {
     e.preventDefault();
     const response = await Axios.post("http://localhost:8080/topic", { title, description})
     setTopics([response.data, ...topics])
+    setTitle("")
+    setDescription("")
   }
   
   return <form method="POST" action="#" onSubmit={submit}>

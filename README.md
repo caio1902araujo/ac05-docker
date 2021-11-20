@@ -22,11 +22,17 @@ Rodamos dois containers do docker para o projeto, sendo um para o **front-end** 
 ## Como rodar?
 
 ### Front-End
+
+vá para pasta `./front-end` e rode o seguinte comando:
+
 ```
 docker compose up
 ```
 
 ### Back-End
+
+vá para pasta `./back-end` e rode o seguinte comando:
+
 ```
 docker compose up
 ```

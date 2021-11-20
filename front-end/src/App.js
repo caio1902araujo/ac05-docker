@@ -1,29 +1,53 @@
 import './App.css';
+import Axios from 'axios'
+import { useState, useEffect } from "react"
 
-const App = () => (
-  <div className="container">
-    <Form/>
+const App = () => {
+ 
+  const [topics, setTopics] = useState([]);
+
+  useEffect(async () => {
+    const res = await Axios.get("http://localhost:8080/topics")
+    console.log(res.data)
+    setTopics(res.data)
+  }, [])
+
+  return <div className="container">
+    <Form topics={topics} setTopics={setTopics} />
     <div className="topic-group">
-      <Topic title="Título 1" description="descrição"/>
+      {topics.map((topic, index) => (
+        <Topic key={index} title={topic.title} description={topic.description}/>
+      ))}
     </div>
   </div>
-)
+}
 
-const Form = () => (
-  <form method="POST">
+const Form = ({topics, setTopics}) => {
+  const [title, setTitle] = useState("")
+  const [description, setDescription] = useState("")
+  
+  const submit = async (e) => {
+    e.preventDefault();
+    const response = await Axios.post("http://localhost:8080/topic", { title, description})
+    setTopics([response.data, ...topics])
+  }
+  
+  return <form method="POST" action="#" onSubmit={submit}>
     <h1>Criando noticia</h1>
-    <Input label = "Título"/>
-    <Input label = "Paragrafo" isBox="true"/>
+    <Input text={title} onValueChanged={setTitle} label="Título"/>
+    <Input text={description} onValueChanged={setDescription} label="Paragrafo" isBox="true"/>
     <Button label="Enviar"/>
   </form>
-)
+}
 
-const Input = ({label, isBox = false}) => (
-  <div className="input-group">
+const Input = ({text, label, isBox = false, onValueChanged}) => {
+  const onChange = (e) => { onValueChanged(e.target.value) };
+  
+  return <div className="input-group">
     <label className="input-label">{label}</label>
-    {isBox ?  <textarea className="input"/> : <input className="input"/>}
+    {isBox ?  <textarea className="input" onChange={onChange} value={text} /> : <input onChange={onChange} value={text} className="input"/>}
   </div>
-)
+}
 
 const Button = ({label}) => (
   <button className="button">{label}</button>
